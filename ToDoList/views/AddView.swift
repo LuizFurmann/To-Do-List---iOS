@@ -11,12 +11,15 @@ struct AddView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var listViewModel: ListViewModel
-    @State var textFieltText: String = ""
+    @State var textFieldText: String = ""
+    
+    @State var alertMessage: String = ""
+    @State var showAltert: Bool = false
     
     var body: some View {
         ScrollView {
             VStack {
-                TextField("Type something here...", text: $textFieltText)
+                TextField("Type something here...", text: $textFieldText)
                     .padding(.horizontal)
                     .frame(height: 55)
                     .background(Color(#colorLiteral(red: 0.9062772393, green: 0.9062772393, blue: 0.9062772393, alpha: 1)))
@@ -36,11 +39,27 @@ struct AddView: View {
             .padding(14)
         }
         .navigationTitle("Add an item 🖋️")
+        .alert(isPresented: $showAltert, content: getAlert)
     }
     
     func saveItem() {
-        listViewModel.addItem(title: textFieltText)
-        presentationMode.wrappedValue.dismiss()
+        if(validateField()) {
+            listViewModel.addItem(title: textFieldText)
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+    
+    func validateField() -> Bool {
+        if(textFieldText.count < 3) {
+            alertMessage = "Minimo de 3 caracteres"
+            showAltert.toggle()
+            return false
+        }
+        return true
+    }
+    
+    func getAlert() -> Alert{
+        return Alert(title: Text(alertMessage))
     }
 }
 

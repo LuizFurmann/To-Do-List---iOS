@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     @State var textFieldText: String = ""
-    @State private var isLoggedIn: Bool = false
+    @Binding var isLoggedIn: Bool
     
     var body: some View {
         NavigationStack {
@@ -26,7 +26,7 @@ struct LoginView: View {
                 ScrollView {
                     
                         VStack {
-                            Spacer().frame(height: 500)
+                            Spacer().frame(height: 450)
                             
                             VStack(spacing: 12) {
                                 
@@ -61,6 +61,7 @@ struct LoginView: View {
                                 .frame(height: 55)
                                 .background(Color(UIColor.secondarySystemBackground))
                                 .cornerRadius(10)
+                                .padding(.bottom, 20)
                                 
                                 Button(action: login,
                                        label: {
@@ -70,7 +71,8 @@ struct LoginView: View {
                                         .frame(maxWidth: .infinity)
                                         .frame(height: 55)
                                         .background(Color.accentColor)
-                                        .cornerRadius(10)
+                                        .cornerRadius(20)
+                                        .padding(.horizontal, 30)
                                 })
                             }
                             .padding(.horizontal, 20)
@@ -94,5 +96,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    
 }

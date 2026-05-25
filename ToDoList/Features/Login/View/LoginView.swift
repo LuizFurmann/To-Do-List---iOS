@@ -8,93 +8,174 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State var textFieldText: String = ""
-    @Binding var isLoggedIn: Bool
+    @State private var email = ""
+    @State private var password = ""
+
     
     var body: some View {
-        NavigationStack {
-        GeometryReader { geometry in
+        
+        ZStack {
+            Color.white
+                .ignoresSafeArea()
             
-            ZStack {
-                Image("login_background")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: geometry.size.width)
-                    .clipped()
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    
-                        VStack {
-                            Spacer().frame(height: 450)
-                            
-                            VStack(spacing: 12) {
-                                
-                                
-                                Text("Login to controll your task")
-                                    .foregroundColor(.white)
-                                    .font(.largeTitle)
-                                    .fontWeight(.bold)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.bottom, 20)
-                                
-                                
-                                HStack {
-                                    Image(systemName: "envelope")
-                                        .foregroundColor(.gray)
-                                    
-                                    TextField("Email", text: $textFieldText)
-                                }
-                                
-                                .padding(.horizontal)
-                                .frame(height: 55)
-                                .background(Color(UIColor.secondarySystemBackground))
-                                .cornerRadius(10)
-                                
-                                
-                                HStack {
-                                    Image(systemName: "lock")
-                                        .foregroundColor(.gray)
-                                    SecureField("Password", text: $textFieldText)
-                                }
-                                .padding(.horizontal)
-                                .frame(height: 55)
-                                .background(Color(UIColor.secondarySystemBackground))
-                                .cornerRadius(10)
-                                .padding(.bottom, 20)
-                                
-                                Button(action: login,
-                                       label: {
-                                    Text("Login")
-                                        .foregroundColor(.white)
-                                        .font(.headline)
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: 55)
-                                        .background(Color.accentColor)
-                                        .cornerRadius(20)
-                                        .padding(.horizontal, 30)
-                                })
-                            }
-                            .padding(.horizontal, 20)
-                            Spacer()
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: geometry.size.height)
-                    }
-                    .navigationDestination(isPresented: $isLoggedIn) {
-                        ListView()
-                    }
-                }
-            }
-            .ignoresSafeArea()
+            backgroundShapes
+            
+            content
         }
-    }
-    
-    func login() {
-        isLoggedIn = true
+
     }
 }
 
-#Preview {
+extension LoginView {
+    private var backgroundShapes: some View {
+        VStack {
+            HStack {
+                TopShape()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.orange,
+                                Color.pink
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 240, height: 180)
+                
+                Spacer()
+            }
+            
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                BottomShape()
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.cyan, Color.blue],
+                            startPoint: .topLeading,
+                            endPoint: .topTrailing
+                        )
+                    )
+                    .frame(width: 240, height: 180)
+            }
+        }
+        .ignoresSafeArea()
+    }
     
+    private var content: some View {
+        VStack {
+            Spacer()
+            
+            Text("Login")
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(.black)
+                .padding(.bottom, 50)
+            
+            VStack(spacing: 18) {
+                customTextField(
+                    icon: "person",
+                    placeholder: "Username",
+                    text: $email
+                )
+                
+                customTextField(
+                    icon: "lock",
+                    placeholder: "Password",
+                    text: $password
+                )
+            }
+            .padding(.horizontal, 30)
+            .padding(.vertical, 40)
+            
+            HStack {
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    Image(systemName: "arrow.right")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .frame(width: 62, height: 62)
+                        .background(
+                            LinearGradient(
+                                colors: [Color.green, Color.cyan],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .clipShape(Circle())
+                        .shadow(color: .cyan.opacity(0.4) , radius: 10, x: 0, y: 5)
+                }
+                .offset(y: -30)
+            }
+            .padding(.horizontal, 45)
+            
+            HStack {
+                Text("Register")
+                    .foregroundColor(.orange)
+                    .fontWeight(.medium)
+                
+                Spacer()
+                
+                Text("Forgot?")
+                    .foregroundColor(.gray.opacity(0.7))
+            }
+            .padding(.horizontal, 40)
+            
+            Spacer()
+        }
+    }
+    
+    
+    private func customTextField(
+        icon: String,
+        placeholder: String,
+        text: Binding<String>
+    ) -> some View {
+
+        HStack(spacing: 15) {
+
+            Image(systemName: icon)
+                .foregroundColor(.gray.opacity(0.6))
+
+            TextField(
+                placeholder,
+                text: text
+            )
+        }
+        .padding()
+        .background(Color.gray.opacity(0.06))
+        .cornerRadius(20)
+    }
+
+    private func customSecureField(
+        icon: String,
+        placeholder: String,
+        text: Binding<String>
+    ) -> some View {
+
+        HStack(spacing: 15) {
+
+            Image(systemName: icon)
+                .foregroundColor(.gray.opacity(0.6))
+
+            SecureField(
+                placeholder,
+                text: text
+            )
+        }
+        .padding()
+        .background(Color.gray.opacity(0.06))
+        .cornerRadius(20)
+    }
+    
+    
+}
+
+#Preview {
+    LoginView()
 }

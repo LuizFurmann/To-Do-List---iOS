@@ -15,7 +15,7 @@ struct RootView: View {
         if isLoggedIn {
             ListView()
         } else {
-            LoginView(isLoggedIn: $isLoggedIn)
+            LoginView()
         }
     }
 }

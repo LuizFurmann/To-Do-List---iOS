@@ -1,16 +1,17 @@
 //
-//  LoginView.swift
+//  RegisterView.swift
 //  ToDoList
 //
-//  Created by Luiz Furmann on 20/04/26.
+//  Created by Luiz Furmann on 25/05/26.
 //
 
 import SwiftUI
 
-struct LoginView: View {
+struct RegisterView: View {
+    @State private var name = ""
     @State private var email = ""
     @State private var password = ""
-
+    @State private var confirmPassword = ""
     
     var body: some View {
         
@@ -26,7 +27,7 @@ struct LoginView: View {
     }
 }
 
-extension LoginView {
+extension RegisterView {
     private var backgroundShapes: some View {
         VStack {
             HStack {
@@ -69,7 +70,7 @@ extension LoginView {
         VStack {
             Spacer()
             
-            Text("Login")
+            Text("Criar uma conta")
                 .font(.system(size: 36, weight: .bold))
                 .foregroundColor(.black)
                 .padding(.bottom, 50)
@@ -77,13 +78,25 @@ extension LoginView {
             VStack(spacing: 18) {
                 customTextField(
                     icon: "person",
-                    placeholder: "Username",
+                    placeholder: "Nome",
                     text: $email
                 )
                 
                 customTextField(
+                    icon: "envelope",
+                    placeholder: "E-mail",
+                    text: $email
+                )
+                
+                customSecureField(
                     icon: "lock",
-                    placeholder: "Password",
+                    placeholder: "Digite uma senha",
+                    text: $password
+                )
+
+                customSecureField(
+                    icon: "lock",
+                    placeholder: "Confirme sua senha",
                     text: $password
                 )
             }
@@ -114,15 +127,14 @@ extension LoginView {
             }
             .padding(.horizontal, 45)
             
-            HStack {
-                Text("Register")
+            HStack(spacing: 4) {
+
+                Text("Already have an account?")
+                    .foregroundColor(.gray)
+
+                Text("Login")
                     .foregroundColor(.orange)
-                    .fontWeight(.medium)
-                
-                Spacer()
-                
-                Text("Forgot?")
-                    .foregroundColor(.gray.opacity(0.7))
+                    .fontWeight(.semibold)
             }
             .padding(.horizontal, 40)
             
@@ -175,5 +187,5 @@ extension LoginView {
 }
 
 #Preview {
-    LoginView()
+    RegisterView()
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BottomShape: Shape {
+struct BottomShapeRegister: Shape {
 
     func path(in rect: CGRect) -> Path {
 
@@ -38,5 +38,5 @@ struct BottomShape: Shape {
 }
 
 #Preview {
-    BottomShape()
+    BottomShapeRegister()
 }

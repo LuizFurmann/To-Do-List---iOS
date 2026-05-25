@@ -11,18 +11,18 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
 
-    
     var body: some View {
-        
-        ZStack {
-            Color.white
-                .ignoresSafeArea()
+        NavigationStack {
             
-            backgroundShapes
-            
-            content
+            ZStack {
+                Color.white
+                    .ignoresSafeArea()
+                
+                backgroundShapes
+                
+                content
+            }
         }
-
     }
 }
 
@@ -93,8 +93,8 @@ extension LoginView {
             HStack {
                 Spacer()
                 
-                Button {
-                    
+                NavigationLink {
+                    ListView()
                 } label: {
                     Image(systemName: "arrow.right")
                         .font(.title2)

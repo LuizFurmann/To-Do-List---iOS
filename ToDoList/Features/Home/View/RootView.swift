@@ -9,12 +9,15 @@ import SwiftUI
 
 struct RootView: View {
     
-    @State private var isLoggedIn = false
-    
     var body: some View {
-        if isLoggedIn {
-            ListView()
+
+        if AuthService.shared.isUserLogged {
+            ListView(
+                userId: AuthService.shared.currentUserId ?? ""
+            )
+
         } else {
+
             LoginView()
         }
     }

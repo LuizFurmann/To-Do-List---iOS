@@ -10,9 +10,22 @@ import SwiftUI
 struct ListView: View {
     
     @EnvironmentObject var listViewModel: ListViewModel
+    let userId: String
     
     var body: some View {
+
         ZStack {
+            Text("Home")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+
+            Text("Usuário logado")
+
+            Text(userId)
+                .font(.caption)
+                .foregroundColor(.gray)
+                .padding()
+            
             if(listViewModel.items.isEmpty) {
                 NoItemsView()
             } else {
@@ -40,7 +53,7 @@ struct ListView: View {
 
 #Preview {
     NavigationView {
-        ListView()
+        ListView(userId: "123")
     }
     .environmentObject(ListViewModel())
 }

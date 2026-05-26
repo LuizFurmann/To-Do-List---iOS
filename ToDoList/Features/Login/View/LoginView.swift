@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
+    @State private var navigateToHome = false
+    @State private var userId = ""
 
     var body: some View {
         NavigationStack {
@@ -95,6 +97,11 @@ extension LoginView {
                 Button {
                     Task {
                         await viewModel.login()
+
+                        if let uid = AuthService.shared.currentUserId {
+                            userId = uid
+                            navigateToHome = true
+                        }
                     }
                 } label: {
                     Image(systemName: "arrow.right")

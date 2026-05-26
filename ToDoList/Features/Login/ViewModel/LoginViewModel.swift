@@ -21,6 +21,8 @@ final class LoginViewModel: ObservableObject {
         
         do {
             
+            print("Tentando login...")
+            
             isLoading = true
             
             try await AuthService.shared.login(
@@ -28,7 +30,11 @@ final class LoginViewModel: ObservableObject {
                 password: password
             )
             
+            print("LOGIN REALIZADO COM SUCESSO")
+            
         } catch {
+            
+            print("ERRO LOGIN: \(error.localizedDescription)")
             
             errorMessage = error.localizedDescription
         }

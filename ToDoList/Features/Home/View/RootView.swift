@@ -9,15 +9,15 @@ import SwiftUI
 
 struct RootView: View {
     
+    @StateObject private var sessionManager = SessionManager()
+    
     var body: some View {
 
-        if AuthService.shared.isUserLogged {
+        if sessionManager.isLoggedIn {
             ListView(
-                userId: AuthService.shared.currentUserId ?? ""
+                userId: sessionManager.userId
             )
-
         } else {
-
             LoginView()
         }
     }

@@ -46,7 +46,23 @@ struct ListView: View {
         .navigationTitle("Todo List 📝")
         .navigationBarItems(
             leading: EditButton(),
-            trailing: NavigationLink("Add", destination: AddView())
+            
+            trailing:
+            
+            HStack {
+                NavigationLink(
+                    "Add",
+                    destination: AddView()
+                )
+
+                Button("Sair") {
+                    do {
+                        try AuthService.shared.logout()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
         )
     }
 }

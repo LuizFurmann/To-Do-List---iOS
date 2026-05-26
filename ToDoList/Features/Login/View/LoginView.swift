@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email = ""
-    @State private var password = ""
+    @StateObject private var viewModel = LoginViewModel()
 
     var body: some View {
         NavigationStack {
@@ -78,13 +77,13 @@ extension LoginView {
                 customTextField(
                     icon: "person",
                     placeholder: "Username",
-                    text: $email
+                    text: $viewModel.email
                 )
                 
                 customTextField(
                     icon: "lock",
                     placeholder: "Password",
-                    text: $password
+                    text: $viewModel.password
                 )
             }
             .padding(.horizontal, 30)
@@ -93,8 +92,10 @@ extension LoginView {
             HStack {
                 Spacer()
                 
-                NavigationLink {
-                    ListView()
+                Button {
+                    Task {
+                        await viewModel.login()
+                    }
                 } label: {
                     Image(systemName: "arrow.right")
                         .font(.title2)

@@ -14,56 +14,156 @@ struct ListView: View {
     
     var body: some View {
 
-        ZStack {
-            Text("Home")
+        NavigationStack {
+
+            ZStack {
+
+                Color(.systemGroupedBackground)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 0) {
+
+                    headerSection
+
+                    if listViewModel.items.isEmpty {
+
+                        Spacer()
+
+                        NoItemsView()
+
+                        Spacer()
+
+                    } else {
+
+                        List {
+
+                            ForEach(listViewModel.items) { item in
+
+                                ListRowView(item: item)
+                                    .listRowSeparator(.hidden)
+                                    .listRowBackground(Color.clear)
+                                    .onTapGesture {
+
+                                        withAnimation(.linear) {
+
+                                            listViewModel.updateItem(item: item)
+                                        }
+                                    }
+                            }
+                            .onDelete(perform: listViewModel.deleteItem)
+                            .onMove(perform: listViewModel.moveItem)
+                        }
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                    }
+                }
+
+                floatingButton
+            }
+            .toolbar {
+
+                ToolbarItem(placement: .topBarLeading) {
+
+                    EditButton()
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+
+                    Button {
+
+                        do {
+
+                            try AuthService.shared.logout()
+
+                        } catch {
+
+                            print(error.localizedDescription)
+                        }
+
+                    } label: {
+
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                    }
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    private var headerSection: some View {
+
+        VStack(alignment: .leading, spacing: 12) {
+
+            Text("Olá 👋")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+
+            Text("Minhas tarefas")
                 .font(.largeTitle)
                 .fontWeight(.bold)
 
-            Text("Usuário logado")
-
-            Text(userId)
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding()
-            
-            if(listViewModel.items.isEmpty) {
-                NoItemsView()
-            } else {
-                List {
-                    ForEach(listViewModel.items) { item in
-                      ListRowView(item: item)
-                            .onTapGesture {
-                                withAnimation(.linear) {
-                                    listViewModel.updateItem(item: item)
-                                }
-                            }
-                    }
-                    .onDelete(perform: listViewModel.deleteItem)
-                    .onMove(perform: listViewModel.moveItem)
-                }
-            }
-        }
-        .navigationTitle("Todo List 📝")
-        .navigationBarItems(
-            leading: EditButton(),
-            
-            trailing:
-            
             HStack {
-                NavigationLink(
-                    "Add",
-                    destination: AddView()
-                )
 
-                Button("Sair") {
-                    do {
-                        try AuthService.shared.logout()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
+                VStack(alignment: .leading, spacing: 6) {
+
+                    Text("Total de tarefas")
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.8))
+
+                    Text("\(listViewModel.items.count)")
+                        .font(.system(size: 34, weight: .bold))
+                        .foregroundColor(.white)
+                }
+
+                Spacer()
+
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 40))
+                    .foregroundColor(.white.opacity(0.9))
+            }
+            .padding()
+            .background(
+                LinearGradient(
+                    colors: [.orange, .pink],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .cornerRadius(24)
+        }
+        .padding()
+    }
+    
+    private var floatingButton: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                NavigationLink {
+                    AddView()
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                        .frame(width: 65, height: 65)
+                        .background(
+                            LinearGradient(
+                                colors: [.green, .cyan],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .clipShape(Circle())
+                        .shadow(
+                            color: .cyan.opacity(0.4),
+                            radius: 10,
+                            x: 0,
+                            y: 5
+                        )
                 }
             }
-        )
+            .padding()
+        }
     }
 }
 

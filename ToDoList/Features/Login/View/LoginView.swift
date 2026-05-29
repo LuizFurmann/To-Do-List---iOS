@@ -76,17 +76,40 @@ extension LoginView {
                 .padding(.bottom, 50)
             
             VStack(spacing: 18) {
-                customTextField(
-                    icon: "person",
-                    placeholder: "Username",
-                    text: $viewModel.email
-                )
-                
-                customTextField(
-                    icon: "lock",
-                    placeholder: "Password",
-                    text: $viewModel.password
-                )
+
+                VStack(alignment: .leading, spacing: 4) {
+
+                    customSecureFields(
+                        icon: "person",
+                        placeholder: "Username",
+                        text: $viewModel.email
+                    )
+
+                    if !viewModel.emailError.isEmpty {
+
+                        Text(viewModel.emailError)
+                            .font(.caption)
+                            .foregroundColor(.red)
+                            .padding(.leading, 5)
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+
+                    CustomSecureField(
+                        icon: "lock",
+                        placeholder: "Password",
+                        text: $viewModel.password
+                    )
+
+                    if !viewModel.passwordError.isEmpty {
+
+                        Text(viewModel.passwordError)
+                            .font(.caption)
+                            .foregroundColor(.red)
+                            .padding(.leading, 5)
+                    }
+                }
             }
             .padding(.horizontal, 30)
             .padding(.vertical, 40)
@@ -138,8 +161,8 @@ extension LoginView {
         }
     }
     
-    
-    private func customTextField(
+
+    private func customSecureFields(
         icon: String,
         placeholder: String,
         text: Binding<String>
@@ -150,31 +173,14 @@ extension LoginView {
             Image(systemName: icon)
                 .foregroundColor(.gray.opacity(0.6))
 
-            TextField(
-                placeholder,
-                text: text
-            )
-        }
-        .padding()
-        .background(Color.gray.opacity(0.06))
-        .cornerRadius(20)
-    }
-
-    private func customSecureField(
-        icon: String,
-        placeholder: String,
-        text: Binding<String>
-    ) -> some View {
-
-        HStack(spacing: 15) {
-
-            Image(systemName: icon)
-                .foregroundColor(.gray.opacity(0.6))
-
-            SecureField(
-                placeholder,
-                text: text
-            )
+            Group {
+                TextField(
+                    placeholder,
+                    text: text
+                )
+            }
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
         }
         .padding()
         .background(Color.gray.opacity(0.06))

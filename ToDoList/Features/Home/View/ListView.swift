@@ -42,13 +42,7 @@ struct ListView: View {
                                 ListRowView(item: item)
                                     .listRowSeparator(.hidden)
                                     .listRowBackground(Color.clear)
-                                    .onTapGesture {
 
-                                        withAnimation(.linear) {
-
-                                            listViewModel.updateItem(item: item)
-                                        }
-                                    }
                             }
                             .onDelete(perform: listViewModel.deleteItem)
                             .onMove(perform: listViewModel.moveItem)
@@ -87,6 +81,14 @@ struct ListView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            
+            // 👇 CARREGA AS TAREFAS AO ABRIR A TELA
+            .task {
+
+                await listViewModel.loadTasks(
+                    userId: userId
+                )
+            }
         }
     }
     

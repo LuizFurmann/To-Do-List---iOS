@@ -11,15 +11,25 @@ struct AddView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var listViewModel: ListViewModel
-    @State var textFieldText: String = ""
+    @State var titleText: String = ""
+    @State var descriptionText: String = ""
     
     @State var alertMessage: String = ""
     @State var showAltert: Bool = false
+    @State private var isLoading = false
+    @State private var showToast = false
+    @State private var toastMessage = ""
     
     var body: some View {
         ScrollView {
             VStack {
-                TextField("Type something here...", text: $textFieldText)
+                TextField("Title", text: $titleText)
+                    .padding(.horizontal)
+                    .frame(height: 55)
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(10)
+
+                TextField("Description", text: $descriptionText)
                     .padding(.horizontal)
                     .frame(height: 55)
                     .background(Color(UIColor.secondarySystemBackground))
@@ -38,23 +48,85 @@ struct AddView: View {
             }
             .padding(14)
         }
+        .overlay(
+            VStack {
+                
+                if showToast {
+                    
+                    HStack {
+                        
+                        Image(systemName: "checkmark.circle.fill")
+                        
+                        Text(toastMessage)
+                    }
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.green)
+                    .cornerRadius(12)
+                    .shadow(radius: 5)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                
+                Spacer()
+            }
+            .padding(.top, 20)
+        )
         .navigationTitle("Add an item 🖋️")
         .alert(isPresented: $showAltert, content: getAlert)
     }
     
     func saveItem() {
-        if(validateField()) {
-            listViewModel.addItem(title: textFieldText)
-            presentationMode.wrappedValue.dismiss()
+
+        guard validateField() else {
+            return
+        }
+
+        guard let userId = AuthService.shared.currentUserId else {
+
+            alertMessage = "Usuário não autenticado"
+            showAltert = true
+            return
+        }
+
+        Task {
+            do {
+                isLoading = true
+
+                try await TaskService.shared.createTask(
+                    title: titleText,
+                    description: descriptionText,
+                    userId: userId
+                )
+                
+                toastMessage = "Tarefa criada com sucesso!"
+                showToast = true
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            } catch {
+                alertMessage = error.localizedDescription
+                showAltert = true
+            }
+            isLoading = false
         }
     }
     
     func validateField() -> Bool {
-        if(textFieldText.count < 3) {
-            alertMessage = "Minimo de 3 caracteres"
-            showAltert.toggle()
+        if titleText.trimmingCharacters(in: .whitespaces).count < 3 {
+
+            alertMessage = "Título deve ter no mínimo 3 caracteres"
+            showAltert = true
             return false
         }
+
+        if descriptionText.trimmingCharacters(in: .whitespaces).count < 3 {
+
+            alertMessage = "Descrição deve ter no mínimo 3 caracteres"
+            showAltert = true
+            return false
+        }
+
         return true
     }
     

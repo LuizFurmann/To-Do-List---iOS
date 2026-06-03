@@ -73,10 +73,24 @@ final class TaskService {
     }
     
     func deleteTask(taskId: String) async throws {
-
         try await db
             .collection("Tasks")
             .document(taskId)
             .delete()
+    }
+    
+    func updateTask(
+        taskId: String,
+        title: String,
+        description: String
+    ) async throws {
+
+        try await db
+            .collection("Tasks")
+            .document(taskId)
+            .updateData([
+                "title": title,
+                "description": description
+            ])
     }
 }

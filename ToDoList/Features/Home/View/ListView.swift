@@ -35,34 +35,46 @@ struct ListView: View {
 
                     } else {
                         List {
+
                             ForEach(listViewModel.items) { item in
-                                ListRowView(item: item)
-                                    .listRowSeparator(.hidden)
-                                    .listRowBackground(Color.clear)
-                                    .listRowInsets(
-                                        EdgeInsets(
-                                            top: 2,
-                                            leading: 10,
-                                            bottom: 4,
-                                            trailing: 10
-                                        )
+
+                                NavigationLink {
+
+                                    EditTaskView(item: item)
+
+                                } label: {
+
+                                    ListRowView(item: item)
+                                }
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
+                                .listRowInsets(
+                                    EdgeInsets(
+                                        top: 2,
+                                        leading: 10,
+                                        bottom: 4,
+                                        trailing: 10
                                     )
-                                    .swipeActions {
-                                        Button(
-                                            role: .destructive
-                                        ) {
-                                            Task {
-                                                await listViewModel.deleteItem(
-                                                    item: item
-                                                )
-                                            }
-                                        } label: {
-                                            Label(
-                                                "Delete",
-                                                systemImage: "trash"
+                                )
+                                .swipeActions {
+
+                                    Button(role: .destructive) {
+
+                                        Task {
+
+                                            await listViewModel.deleteItem(
+                                                item: item
                                             )
                                         }
+
+                                    } label: {
+
+                                        Label(
+                                            "Delete",
+                                            systemImage: "trash"
+                                        )
                                     }
+                                }
                             }
                             .onMove(perform: listViewModel.moveItem)
                         }

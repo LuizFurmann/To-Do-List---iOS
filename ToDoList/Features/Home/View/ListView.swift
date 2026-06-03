@@ -34,17 +34,36 @@ struct ListView: View {
                         Spacer()
 
                     } else {
-
                         List {
-
                             ForEach(listViewModel.items) { item in
-
                                 ListRowView(item: item)
                                     .listRowSeparator(.hidden)
                                     .listRowBackground(Color.clear)
-
+                                    .listRowInsets(
+                                        EdgeInsets(
+                                            top: 2,
+                                            leading: 10,
+                                            bottom: 4,
+                                            trailing: 10
+                                        )
+                                    )
+                                    .swipeActions {
+                                        Button(
+                                            role: .destructive
+                                        ) {
+                                            Task {
+                                                await listViewModel.deleteItem(
+                                                    item: item
+                                                )
+                                            }
+                                        } label: {
+                                            Label(
+                                                "Delete",
+                                                systemImage: "trash"
+                                            )
+                                        }
+                                    }
                             }
-                            .onDelete(perform: listViewModel.deleteItem)
                             .onMove(perform: listViewModel.moveItem)
                         }
                         .listStyle(.plain)
@@ -55,27 +74,19 @@ struct ListView: View {
                 floatingButton
             }
             .toolbar {
-
                 ToolbarItem(placement: .topBarLeading) {
-
                     EditButton()
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
 
                     Button {
-
                         do {
-
                             try AuthService.shared.logout()
-
                         } catch {
-
                             print(error.localizedDescription)
                         }
-
                     } label: {
-
                         Image(systemName: "rectangle.portrait.and.arrow.right")
                     }
                 }
@@ -84,7 +95,6 @@ struct ListView: View {
             
             // 👇 CARREGA AS TAREFAS AO ABRIR A TELA
             .task {
-
                 await listViewModel.loadTasks(
                     userId: userId
                 )

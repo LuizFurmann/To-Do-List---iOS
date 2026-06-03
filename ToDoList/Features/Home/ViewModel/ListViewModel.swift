@@ -37,8 +37,19 @@ class ListViewModel: ObservableObject {
         }
     }
     
-    func deleteItem(indexSet: IndexSet) {
-        items.remove(atOffsets: indexSet)
+    @MainActor
+    func deleteItem(item: ItemModel) async {
+        do {
+            try await TaskService.shared.deleteTask(
+                taskId: item.id
+            )
+
+            items.removeAll {
+                $0.id == item.id
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     func moveItem(from: IndexSet, to: Int) {
